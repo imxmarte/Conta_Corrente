@@ -5,7 +5,7 @@ USE ContaCorrente;
 CREATE TABLE IF NOT EXISTS Cliente (
 	idCliente INT PRIMARY KEY AUTO_INCREMENT,
     nome VARCHAR(100) NOT NULL,
-    cpf CHAR(11) NOT NULL,
+    cpf CHAR(11) NOT NULL UNIQUE,
     telefone VARCHAR(20),
     email VARCHAR(100),
     endereco VARCHAR(200),
@@ -15,8 +15,8 @@ CREATE TABLE IF NOT EXISTS Cliente (
 CREATE TABLE IF NOT EXISTS ContasCorrentes (
 	idConta INT PRIMARY KEY AUTO_INCREMENT,
     idCliente INT NOT NULL,
-    saldo DECIMAL(10,2),
-    limiteCredito DECIMAL(10,2),
+    saldo DECIMAL(10,2) NOT NULL DEFAULT 0.00,
+    limiteCredito DECIMAL(10,2) DEFAULT 0.00,
     ativo BOOLEAN DEFAULT TRUE,
     
     CONSTRAINT fk_conta_Cliente
@@ -33,7 +33,7 @@ CREATE TABLE IF NOT EXISTS Movimentacoes (
 	idMovimentacoes INT PRIMARY KEY AUTO_INCREMENT,
     idTipoMovimentacoes INT NOT NULL,
     idConta INT NOT NULL,
-    valor DECIMAL(10,2),
+    valor DECIMAL(10,2) NOT NULL,
     data_hora DATETIME NOT NULL,
     
     CONSTRAINT fk_Movimentacoes_tipoMovimentacoes
@@ -47,7 +47,7 @@ CREATE TABLE IF NOT EXISTS Movimentacoes (
 
 DROP USER IF EXISTS 'Admin'@'localhost';
 CREATE USER 'Admin'@'localhost' IDENTIFIED BY 'admin1234';
-GRANT ALTER, INSERT, DELETE,  CREATE ON contaCorrente.* TO 'Admin'@'localhost';
+GRANT ALL PRIVILEGES ON contaCorrente.* TO 'Admin'@'localhost';
 
 DROP USER IF EXISTS 'Correntista'@'localhost';
 CREATE USER 'Correntista'@'localhost' IDENTIFIED BY 'corren1234';
