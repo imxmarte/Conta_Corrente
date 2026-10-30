@@ -45,6 +45,52 @@ CREATE TABLE IF NOT EXISTS Movimentacoes (
         REFERENCES ContasCorrentes(idConta)
 );
 
+DROP TRIGGER IF EXISTS verificar_saque;
+DELIMITER $$
+CREATE TRIGGER verificar_saque
+ 
+Before INSERT ON Movimentacoes
+FOR EACH ROW
+BEGIN
+	DECLARE v_saldo DECIMAL(10,2);
+	DECLARE v_LimiteCredito DECIMAL(10,2);
+    
+	SELECT saldo, LimiteCredito
+	INTO v_saldo, v_limiteCredito
+	From ContasCorrentes
+	Where idConta = NEW.idConta;
+
+	IF NEW.idTipoMovimentacoes = 2
+		AND NEW.valor > (v_saldo + v_limiteCredito) THEN
+
+	SIGNAL SQLSTATE '45000'
+	SET MESSAGE_TEXT = 'SALDO INSUFICIENTE PARA SAQUE';
+
+	END IF;
+END $$
+DELIMITER ;
+
+DROP TRIGGER IF EXISTS atualizar_saldo;
+DELIMITER $$
+
+CREATE TRIGGER atualizar_saldo
+AFTER INSERT ON Movimentacoes
+FOR EACH ROW
+BEGIN
+    IF NEW.idTipoMovimentacoes = 1 THEN
+        UPDATE ContasCorrentes
+        SET saldo = saldo + NEW.valor
+        WHERE idConta = NEW.idConta;
+
+    ELSEIF NEW.idTipoMovimentacoes = 2 THEN
+        UPDATE ContasCorrentes
+        SET saldo = saldo - NEW.valor
+        WHERE idConta = NEW.idConta;
+    END IF;
+END$$
+
+DELIMITER ;
+
 DROP USER IF EXISTS 'Admin'@'localhost';
 CREATE USER 'Admin'@'localhost' IDENTIFIED BY 'admin1234';
 GRANT ALL PRIVILEGES ON contaCorrente.* TO 'Admin'@'localhost';
