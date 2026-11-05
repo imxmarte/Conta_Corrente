@@ -111,7 +111,7 @@ INSERT INTO Clientes
 (nome, cpf, telefone, email, endereco, data_nascimento)
 VALUES
 ('Sylvaney Barros', '22222233331', '41985293964', 'joice.barros07@gmail.com', 'Rua Bororos, 376', '1991-03-07'),
-('Joana Maria', '11134567890', '41994809930', 'joanamaria@gmail.com', 'Rua do Carmo, 45', '1970-02-01'),
+('Renan da Silva', '11134567890', '41994809930', 'renandasilva@gmail.com', 'Rua do Carmo, 45', '1970-02-01'),
 ('Stephany Barbosa', '99988877710', '41987857013', 'stephanybarbosasil@gmail.com', 'Rua Anita Muller Palu, 162', '2007-02-20'),
 ('Marcela Alves', '23748950348', '41999934560', 'marcela@email.com', 'Rua de tal, 567', '2001-12-19');
 
